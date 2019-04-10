@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<checkstyle version="8.17">
+<checkstyle version="8.18">
 <file name="/Users/andy/Documents/andy/project/base-pom/src/main/java/test/checkstyle/CheckstyleTest.java">
 <error line="3" severity="error" message="类注释：缺少Javadoc注释。" source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocTypeCheck"/>
 <error line="5" column="33" severity="error" message="Name &apos;abc&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
-<error line="7" column="7" severity="error" message="方法注释：缺少Javadoc注释。" source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="7" column="5" severity="error" message="方法注释：缺少Javadoc注释。" source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="8" severity="error" message="Line is longer than 120 characters (found 151)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="8" severity="error" message="Line matches the illegal pattern &apos;System\.out\.println&apos;." source="com.puppycrawl.tools.checkstyle.checks.regexp.RegexpCheck"/>
 </file>
 </checkstyle>
