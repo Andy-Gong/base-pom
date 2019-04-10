@@ -10,7 +10,7 @@
 
     <properties>
         <dev.checkstyle.version>3.0.0</dev.checkstyle.version>
-        <dev.puppycrawl.version>8.17</dev.puppycrawl.version>
+        <dev.puppycrawl.version>8.18</dev.puppycrawl.version>
     </properties>
 
 
