@@ -7,46 +7,127 @@
     <groupId>andy-example</groupId>
     <artifactId>base-pom</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
     <properties>
         <dev.checkstyle.version>3.0.0</dev.checkstyle.version>
         <dev.puppycrawl.version>8.18</dev.puppycrawl.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <dev.pmd.version>6.13.0</dev.pmd.version>
     </properties>
 
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${dev.checkstyle.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>${dev.puppycrawl.version}</version>
-                        <scope>compile</scope>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <configLocation>${project.basedir}/alibaba_checks.xml</configLocation>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>validate</id>
-                        <phase>validate</phase>
-                        <configuration>
-                            <consoleOutput>true</consoleOutput>
-                            <failsOnError>true</failsOnError>
-                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                        </configuration>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${dev.checkstyle.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>${dev.puppycrawl.version}</version>
+                            <scope>compile</scope>
+                        </dependency>
+                    </dependencies>
+                    <configuration>
+                        <configLocation>maven-policy/check-style/alibaba_checks.xml</configLocation>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>validate</id>
+                            <phase>validate</phase>
+                            <configuration>
+                                <consoleOutput>true</consoleOutput>
+                                <failsOnError>true</failsOnError>
+                                <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                            </configuration>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <sun.jnu.encoding>${project.build.sourceEncoding}</sun.jnu.encoding>
+                            <user.timezone>UTC</user.timezone>
+                            <java.awt.headless>true</java.awt.headless>
+                            <java.util.logging.SimpleFormatter.format>%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS %4$s
+                                %5$s%6$s%n
+                            </java.util.logging.SimpleFormatter.format>
+                            <!-- speed up tests that use random, see https://bugs.openjdk.java.net/browse/JDK-6202721 for details -->
+                            <java.security.egd>file:/dev/./urandom</java.security.egd>
+                        </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <systemPropertyVariables combine.children="append">
+                            <sun.jnu.encoding>${project.build.sourceEncoding}</sun.jnu.encoding>
+                            <user.timezone>UTC</user.timezone>
+                            <java.awt.headless>true</java.awt.headless>
+                            <java.util.logging.SimpleFormatter.format>%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS %4$s
+                                %5$s%6$s%n
+                            </java.util.logging.SimpleFormatter.format>
+                            <!-- speed up tests that use random, see https://bugs.openjdk.java.net/browse/JDK-6202721 for details -->
+                            <java.security.egd>file:/dev/./urandom</java.security.egd>
+                        </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+                <!-- The duplicate-finder-maven-plugin is a plugin that will search for classes with the same name,
+                as well as resources with the same path, in the classpaths of a maven project.
+                 More specifically, it will check the compile, runtime, and test classpaths.
+                 https://github.com/ning/maven-duplicate-finder-plugin -->
+                <plugin>
+                    <groupId>com.ning.maven.plugins</groupId>
+                    <artifactId>duplicate-finder-maven-plugin</artifactId>
+<!--                    <version>1.1.0</version>-->
+                    <executions>
+                        <execution>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-pmd-plugin</artifactId>
+                    <version>3.11.0</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>net.sourceforge.pmd</groupId>
+                            <artifactId>pmd-core</artifactId>
+                            <version>${dev.pmd.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>net.sourceforge.pmd</groupId>
+                            <artifactId>pmd-java</artifactId>
+                            <version>${dev.pmd.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>net.sourceforge.pmd</groupId>
+                            <artifactId>pmd-javascript</artifactId>
+                            <version>${dev.pmd.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>net.sourceforge.pmd</groupId>
+                            <artifactId>pmd-jsp</artifactId>
+                            <version>${dev.pmd.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 </project>
